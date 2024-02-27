@@ -1,0 +1,25 @@
+{{ if ne .Values.global.env "local" }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .Values.certificate.name }}
+  # annotations:
+  #   "helm.sh/resource-policy": keep
+  namespace: {{ .Values.namespace  }} # Todo: remove for cluster issuer 
+spec:
+  secretName: {{ .Values.certificate.secretName }}
+  issuerRef:
+    kind: Issuer # TODO: manage cluster issuer
+    name: le-cert-issuer-{{ .Values.global.env }}
+  duration: {{ .Values.certificate.duration }}  
+  renewBefore: {{ .Values.certificate.renewBefore }}
+  dnsNames: {{- toYaml .Values.dnsNames | nindent 4 }}
+
+{{- if and  .Values.secretTemplate  .Values.secretTemplate.annotations  }}
+  secretTemplate:
+    annotations:
+{{- toYaml .Values.secretTemplate.annotations | nindent 6 }}
+{{ end }}
+
+
+{{ end }}

@@ -1,0 +1,40 @@
+# Default values for le-cert.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+global:
+  env: stage # stage | prod 
+
+namespace: default
+letsencryptUserEmail: user@example.com
+
+dnsNames:
+  - example.com
+  - "*.example.com"
+
+cloudflare:
+  apiToken: sometokenvalue
+  secret:
+    name: cloudflare-api-token-secret1
+    key: api-token
+
+
+certificate:
+  name: letsencrypt-stage-cert
+  secretName: le-domain-tls-stage
+  duration: 2160h # 90d
+  renewBefore: 720h # 30d before SSL will expire, renew it
+
+letsencrypt:
+  servers:
+    staging: https://acme-staging-v02.api.letsencrypt.org/directory
+    production: https://acme-v02.api.letsencrypt.org/directory
+
+
+# secretTemplate:
+#   annotations:
+#     reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+#     reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+#     reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "default,kafka,keycloak,argocd"
+
+

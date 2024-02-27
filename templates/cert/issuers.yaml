@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: le-cert-issuer-{{ .Values.global.env }} # TODO: add it to variables with default value
+  namespace: {{ .Values.namespace  }}
+spec:
+  acme:
+    email: {{ .Values.letsencryptUserEmail }}
+    server: {{ if eq .Values.global.env "prod" }}{{ .Values.letsencrypt.servers.production }}{{else if eq .Values.global.env "stage" }}{{ .Values.letsencrypt.servers.staging }}{{ end }}
+    privateKeySecretRef:
+      name: {{ .Values.issuer.name }}-pk
+    solvers:
+    - dns01:
+        cloudflare:
+          email: {{ .Values.letsencryptUserEmail }}
+          apiTokenSecretRef:
+            name: {{ .Values.cloudflare.secret.name }}
+            key: {{ .Values.cloudflare.secret.key }}
