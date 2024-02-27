@@ -8,7 +8,7 @@ spec:
     email: {{ .Values.letsencryptUserEmail }}
     server: {{ if eq .Values.global.env "prod" }}{{ .Values.letsencrypt.servers.production }}{{else if eq .Values.global.env "stage" }}{{ .Values.letsencrypt.servers.staging }}{{ end }}
     privateKeySecretRef:
-      name: {{ .Values.issuer.name }}-pk
+      name: le-cert-issuer-{{ .Values.global.env }}-pk
     solvers:
     - dns01:
         cloudflare:
